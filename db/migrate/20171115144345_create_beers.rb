@@ -8,6 +8,7 @@ class CreateBeers < ActiveRecord::Migration[5.0]
       t.string :isorganic
       t.integer :rating
       t.string :api_key
+      t.integer :brewery_id
     end
   end
 end
