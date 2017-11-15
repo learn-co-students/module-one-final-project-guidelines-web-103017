@@ -44,6 +44,7 @@ class User < ActiveRecord::Base
 		end
 
 		#recipe_hash
+		binding.pry
 		recipes = {}
 		recipe_perm.each do |array|
 			arr = []  
@@ -62,14 +63,14 @@ class User < ActiveRecord::Base
 
 		recipes.each{|k,v| v.compact!}
 
-		recipes.each do |k,v|
-			v.each do |x|
-				response = RestClient.get("http://www.thecocktaildb.com/api/json/v1/1/search.php?s=#{x}")
+		recipes.each do |ingredients,recipe_names|
+			recipe_names.each do |recipe|
+				response = RestClient.get("http://www.thecocktaildb.com/api/json/v1/1/search.php?s=#{recipe}")
 				cocktail_ing = JSON.parse(response)
 				ingredient = cocktail_ing['drinks'][0].map{|k,v| v if k.include?("strIngredient")}.compact!.reject!(&:empty?)
-
-				if ingredient && ingredient.length - k.length >= 2 
-					v.delete(x)
+				
+				if ingredient && ingredient.length - ingredients.length >= 3 
+					recipe_names.delete(recipe)
 				end
 			end
 		end
