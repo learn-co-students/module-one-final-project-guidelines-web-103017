@@ -5,11 +5,11 @@ responses = page_data.parsed_response
 
 counties = responses.collect{|x| x["county"].downcase}.uniq
 # when done go back and look for slashes, which indicate 2 counties (e.g. "Broome/Delaware")
-counties.each{|x| County.create(x})}
+counties.each{|x| County.create(name: x)}
 # makes all County instances
 
 waterbodies = responses.collect{|x| x["water"].downcase}.uniq
-waterbodies.each{|x| Waterbody.create(x})}
+waterbodies.each{|x| Waterbody.create(name: x)}
 
 fishes_dirty = responses.collect{|x| x["fish_speci"]}
 # pulls all fishes from responses
@@ -17,5 +17,5 @@ fishes_clean = fishes_dirty.join("-").split("-").collect{|x|x.strip.downcase}.un
 # fish_speci from api is currently separated by hyphens. we join all response entires
 # and then split by hypen to get array of all fishes in all lakes, then remove whitespace
 # and run uniq to get unique list.
-fishes_clean.each{|x| Fish.create(x})}
+fishes_clean.each{|x| Fish.create(name: x)}
 # makes all fish instances
