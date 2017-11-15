@@ -33,6 +33,22 @@ ActiveRecord::Schema.define(version: 20171115171341) do
     t.integer "api_id"
   end
 
+  create_table "breweries", force: :cascade do |t|
+    t.string  "name"
+    t.text    "description"
+    t.string  "classification"
+    t.integer "established"
+    t.string  "website"
+    t.float   "latitude"
+    t.float   "longitude"
+    t.string  "address"
+    t.string  "city"
+    t.string  "state"
+    t.string  "country"
+    t.integer "postalcode"
+    t.string  "api_key"
+  end
+
   create_table "userbeers", force: :cascade do |t|
     t.integer "beer_id"
     t.integer "user_id"
