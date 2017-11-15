@@ -19,3 +19,16 @@ fishes_clean = fishes_dirty.join("-").split("-").collect{|x|x.strip.downcase}.un
 # and run uniq to get unique list.
 fishes_clean.each{|x| Fish.create(name: x)}
 # makes all fish instances
+
+def fish_to_array(string)
+  string.split("-").collect{|x|x.strip.downcase}
+end
+
+responses.each do |row|
+  water_id = Waterbody.find_or_create_by(name: row["water"].downcase).id
+  fish_to_array(row["fish_speci"]).each do |fish|
+    #binding.pry
+    fish_id = Fish.find_or_create_by(name: fish).id
+    WaterbodyFish.create(waterbody_id: water_id, fish_id: fish_id)
+  end
+end

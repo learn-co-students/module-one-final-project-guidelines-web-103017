@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 5) do
     t.string "name"
   end
 
-  create_table "waterbodies_fish", force: :cascade do |t|
+  create_table "waterbody_fishes", force: :cascade do |t|
     t.integer "waterbody_id"
     t.integer "fish_id"
   end
