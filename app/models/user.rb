@@ -31,10 +31,6 @@ class User < ActiveRecord::Base
 			end
 		end
 
-
-		#binding.pry
-
-		#recipe_hash{"gin" => #results, }
 		z = recipe_hash.keys.length
 		recipe_perm = [] 
 		until z < 2  do
@@ -43,20 +39,43 @@ class User < ActiveRecord::Base
 		end
 		recipe_perm = recipe_perm.flatten(1)
 
-		binding.pry
-		# recipe_perm.each do |x|
-		# 	recipe_hash
+		recipe_hash.keys.each do |ingredient|
+			recipe_hash[ingredient] = recipe_hash[ingredient]['drinks'].map{|x| x['strDrink']}
+		end
 
+		#recipe_hash
+		recipes = {}
+		recipe_perm.each do |array|
+			arr = []  
+			array.each do |x|   
+				arr << recipe_hash[x]       
+			end  
+			hsh = Hash.new(0)  
+			arr.flatten.collect{|x| hsh[x] += 1}
 
+			recipes[array] = hsh.map{|k,v| 
+				if v == array.length 
+					k
+				end 
+			}
+		end 
 
+		recipes.each{|k,v| v.compact!}
 
+		recipes.each do |k,v|
+			v.each do |x|
+				response = RestClient.get("http://www.thecocktaildb.com/api/json/v1/1/search.php?s=#{x}")
+				cocktail_ing = JSON.parse(response)
+				ingredient = cocktail_ing['drinks'][0].map{|k,v| v if k.include?("strIngredient")}.compact!.reject!(&:empty?)
 
+				if ingredient && ingredient.length - k.length >= 2 
+					v.delete(x)
+				end
+			end
+		end
 
-
-		
-		#1. take each ingredient and query API DB
-		#2. Return recipes that include that overlap
 
 
 	end
+
 end
