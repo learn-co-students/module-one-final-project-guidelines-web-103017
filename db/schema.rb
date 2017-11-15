@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 5) do
     t.string "name"
   end
 
-  create_table "counties_waterbodies", force: :cascade do |t|
+  create_table "county_waterbodies", force: :cascade do |t|
     t.integer "county_id"
     t.integer "waterbody_id"
   end
