@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171115145455) do
+ActiveRecord::Schema.define(version: 20171115171149) do
 
   create_table "beers", force: :cascade do |t|
     t.string  "name"
@@ -19,6 +19,22 @@ ActiveRecord::Schema.define(version: 20171115145455) do
     t.string  "description"
     t.string  "isorganic"
     t.integer "rating"
+    t.string  "api_key"
+  end
+
+  create_table "breweries", force: :cascade do |t|
+    t.string  "name"
+    t.text    "description"
+    t.string  "classification"
+    t.integer "established"
+    t.string  "website"
+    t.float   "latitude"
+    t.float   "longitude"
+    t.string  "address"
+    t.string  "city"
+    t.string  "state"
+    t.string  "country"
+    t.integer "postalcode"
     t.string  "api_key"
   end
 
