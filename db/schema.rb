@@ -28,11 +28,6 @@ ActiveRecord::Schema.define(version: 20171115171341) do
     t.integer "brewery_id"
   end
 
-  create_table "ingredients", force: :cascade do |t|
-    t.string  "name"
-    t.integer "api_id"
-  end
-
   create_table "breweries", force: :cascade do |t|
     t.string  "name"
     t.text    "description"
@@ -47,6 +42,11 @@ ActiveRecord::Schema.define(version: 20171115171341) do
     t.string  "country"
     t.integer "postalcode"
     t.string  "api_key"
+  end
+
+  create_table "ingredients", force: :cascade do |t|
+    t.string  "name"
+    t.integer "api_id"
   end
 
   create_table "userbeers", force: :cascade do |t|
