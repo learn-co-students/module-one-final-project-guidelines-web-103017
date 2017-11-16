@@ -1,21 +1,25 @@
 def create_account
-  create_user
-  # sleep(5)
-  system('clear')
-  home_screen
+  puts "Please enter your first and last name:"
+  username = get_input
+  if user_exist(username)
+    puts "Looks like you have an account, please log in from main menu"
+    sleep(3)
+    runner
+  else
+    create_user(username)
+    sleep(5)
+    system('clear')
+    home_screen
+  end
 end
 
 private
 
-def get_input
-  gets.chomp
+def user_exist(full_name)
+  !!User.find_by(name: full_name)
 end
 
-
-def create_user
-  puts "Please enter your first and last name:"
-  username = get_input
-
+def create_user(username)
   puts "Please enter your city:"
   cityname = get_input
   puts "Please enter your state:"
@@ -32,5 +36,6 @@ def create_user
     zipcode: zipcode,
     country: country)
 
+  @@user = User.find_by(name: username)
   puts "Thank you, #{username}! You can now return to the menu and browse beers and breweries!"
 end

@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 20171116204741) do
     t.integer "api_id"
   end
 
-  create_table "userbeers", force: :cascade do |t|
+  create_table "user_beers", force: :cascade do |t|
     t.integer "beer_id"
     t.integer "user_id"
     t.integer "rating"

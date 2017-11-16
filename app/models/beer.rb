@@ -1,6 +1,6 @@
 class Beer < ActiveRecord::Base
-  has_many :userbeers
-  has_many :users, through: :userbeers
+  has_many :user_beers
+  has_many :users, through: :user_beers
   has_many :beer_ingredients
   has_many :ingredients, through: :beer_ingredients
 
@@ -14,3 +14,4 @@ class Beer < ActiveRecord::Base
     ~~~ "
   end
 end
+

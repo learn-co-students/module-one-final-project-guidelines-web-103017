@@ -1,4 +1,4 @@
 class User < ActiveRecord::Base
-  has_many :userbeers
-  has_many :beers, through: :userbeers
+  has_many :user_beers
+  has_many :beers, through: :user_beers
 end
