@@ -13,8 +13,9 @@ class CLI
     puts "2 - Tell me all the species of fish available in a NY county"
     puts "3 - Tell me all the New York counties with a specific species of fish"
     puts "4 - Tell me all the bodies of water in a New York county"
+    puts "5 - Tell me all the bodies of water that have a specific amenity"
 
-    puts "5 - Exit"
+    puts "6 - Exit"
   end
 
   def self.regreet
@@ -78,6 +79,21 @@ class CLI
     end
   end
 
+  def self.input_5
+    puts "What amenity would you like to search for?"
+    puts "If you would like to search for more than one, please separate by commas."
+    puts "Options include: boat rental, campsite, fishing pier, or marina"
+    input_name = gets.chomp.downcase.split(",").collect{|x|x.strip.downcase}
+    # system 'clear'
+    inputs_as_objects = input_name.collect{|input| Amenity.find_by(name: input)}
+    waterbody_objects = Waterbody.all.select{|x| x.amenities & inputs_as_objects == inputs_as_objects}
+    binding.pry
+    waterbody_objects.each do |waterbody|
+      puts("#{waterbody.name.titleize} - #{waterbody.counties.collect{|x|x.name.titleize}.to_sentence}")
+    end
+  end
+
+
   def self.invalid_input
     system 'clear'
     puts "Your input is invalid"
@@ -94,7 +110,9 @@ class CLI
       input_3
     elsif input == 4
       input_4
-    elsif input != 5
+    elsif input == 5
+      input_5
+    elsif input != 6
       invalid_input
     end
 
@@ -108,7 +126,7 @@ class CLI
     choices
     input = gets.chomp.to_i
     system 'clear'
-    while input != 5 && input != "exit"
+    while input != 6 && input != "exit"
       #binding.pry
       command(input)
       regreet
@@ -117,7 +135,7 @@ class CLI
       system 'clear'
     end
     system 'clear'
-    puts small_fish
+    ASCII.small_fish
     puts "Goodbye!"
   end
 
