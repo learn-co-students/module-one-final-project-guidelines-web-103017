@@ -4,21 +4,19 @@ class CLI
 
   def self.welcome_list_choices
     puts("Hey Fish Head, we have alllll the fish in New York State. What can I get you? /n
-    (Input the number corresponding to the information you would like.) /n
-    1 - Tell me all the species of fish available in a NY body of water /n
+    (Input the number corresponding to the information you would like.) /n")
+  end
+
+  def self.choices
+    puts("1 - Tell me all the species of fish available in a NY body of water /n
     2 - Tell me all the species of fish available in a NY county /n
     3 - Tell me all the New York counties with a specific species of fish /n
     4 - Tell me all the waterbodies in a New York county /n
     5 - Exit /n")
   end
 
-  def self.relist_choices
-    puts("Hey there! Quick reminder of your options /n
-    1 - Tell me all the species of fish available in a NY body of water /n
-    2 - Tell me all the species of fish available in a NY county /n
-    3 - Tell me all the New York counties with a specific species of fish /n
-    4 - Tell me all the waterbodies in a New York county /n
-    5 - Exit /n")
+  def self.regreet
+    puts("Hey there! Quick reminder of your options /n")
   end
 
   # #Paul original
@@ -94,11 +92,13 @@ class CLI
   def self.run
     #entry point list commands neeed to implement project
     welcome_list_choices
+    choices
     input = gets.chomp.to_i
     while input != 5 && input != "exit"
       #binding.pry
       command(input)
-      relist_choices
+      regreet
+      choices
       input = gets.chomp.to_i
     end
     puts "Goodbye!"
