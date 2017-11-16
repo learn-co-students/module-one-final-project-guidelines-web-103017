@@ -8,24 +8,22 @@ class User < ActiveRecord::Base
 	has_many :recipes, through: :userrecipes
 
 	def add_ingredients(array)
-		array.each do |x|
-			x.downcase
-			ingredient = Ingredient.new(name: x)
-			ingredient.save
-			self.ingredients << ingredient
+		array.each do |ingredient|
+			ingredient.downcase
+			new_ingredient = Ingredient.find_or_create_by(name: ingredient)
+			new_ingredient.save
+		 	self.ingredients << new_ingredient
 		end
 	end
 
 	def findrecipes
-		binding.pry
+		
 		ingredients = self.ingredients.map{|x| x.name}
 		
 		recipe_hash = {}
 		ingredients.each do |x|
 			recipes = RestClient.get("http://www.thecocktaildb.com/api/json/v1/1/filter.php?i=#{x}")
-			#binding.pry
 			no_ingredients = (recipes.to_s == "")
-			#binding.pry
 			if no_ingredients == false
 				parser = JSON.parse(recipes)
 				recipe_hash[x] = parser
@@ -90,10 +88,28 @@ class User < ActiveRecord::Base
 		     arr = duplicate - ingredients.to_a 
 		     arr.length
 		   end  
-		 ]  
+		 ] 
+
+		 # missing_ingredients =Hash[all_cocktails.sort_by do |k,v|
+		 # 	arr = v&ingredients.to_a
+		 # 	arr.each{|el| v.delete(el)}
+		 #   end  
+		 # ]
+		 #binding.pry
+
+		 all_cocktails.each do |recipe_id,ingredients|
+		 	recipe = Recipe.find_or_create_by(name: recipe_id)
+		 	ingredients.each do |recipe_ingredient|
+		 		recipe.ingredients << Ingredient.find_or_create_by(name: recipe_ingredient)
+		 	end
+		 	recipe.save
+		 	self.recipes << recipe
+		 end
 
 
 
 	end
+
+
 
 end
