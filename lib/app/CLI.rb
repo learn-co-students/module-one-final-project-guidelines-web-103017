@@ -45,7 +45,7 @@ class CLI
   # these don't work - 2nd arg is a method and you cant pass a method as an argument
   # I think that's the error anyway
   def self.input_1
-    puts("Which bady of water would you like to see fish for?")
+    puts("Which body of water would you like to see fish for?")
     input_name = gets.chomp.downcase
     if !Waterbody.find_by(name: input_name)
       puts("Hmmmm... Sorry, we don't have info on that body of water")
@@ -56,7 +56,14 @@ class CLI
   end
 
   def self.input_2
-    give_em_what_they_want(Fish, counties)
+    puts("Which county would you like to see fish for?")
+    input_name = gets.chomp.downcase
+    if !County.find_by(name: input_name)
+      puts("Hmmmm... Sorry, we don't have info on that county")
+    else
+      output = County.find_by(name: input_name).fish.collect{|x|x[:name]}.to_sentence
+      puts("You can find #{output} in #{input_name} county")
+    end
   end
 
   def self.input_3
