@@ -8,7 +8,7 @@ def fish_to_array(string)
 end
 
 responses.each do |row|
-  water_id = Waterbody.find_or_create_by(name: row["water"].downcase).id
+  water_id = Waterbody.find_or_create_by(name: row["water"].downcase, url: row["weblink"]).id
   fish_to_array(row["fish_speci"]).each do |fish|
     #binding.pry
     fish_id = Fish.find_or_create_by(name: fish).id
@@ -22,7 +22,7 @@ def county_to_array(string)
 end
 
 responses.each do |row|
-  water_id = Waterbody.find_or_create_by(name: row["water"].downcase).id
+  water_id = Waterbody.find_or_create_by(name: row["water"].downcase, url: row["weblink"]).id
   county_to_array(row["county"]).each do |county|
     #binding.pry
     county_id = County.find_or_create_by(name: county).id

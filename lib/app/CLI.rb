@@ -30,8 +30,15 @@ class CLI
     if !Waterbody.find_by(name: input_name)
       puts("Hmmmm... Sorry, we don't have info on that body of water")
     else
+      amenities = Waterbody.find_by(name: input_name).amenities.collect{|x|x[:name]}.to_sentence
       output = Waterbody.find_by(name: input_name).fish.collect{|x|x[:name]}.to_sentence
       puts("You can find #{output.titleize} in #{input_name.titleize}")
+      puts("In case you were wondering, #{input_name.titleize} has a #{amenities}.")
+      puts("Would you like to visit the #{input_name.titleize} website? (yes or no)")
+      yesno = gets.chomp.downcase
+      if yesno == "yes"
+        system("open", Waterbody.find_by(name: input_name).url)
+      end
     end
   end
 
