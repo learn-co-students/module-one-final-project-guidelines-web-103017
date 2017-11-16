@@ -1,4 +1,4 @@
 class Ingredient < ActiveRecord::Base
-  has_many :beeringredients
-  has_many :beers, through: :beeringredients
+  has_many :beer_ingredients
+  has_many :beers, through: :beer_ingredients
 end

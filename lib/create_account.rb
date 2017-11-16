@@ -1,6 +1,6 @@
 def create_account
   create_user
-  sleep(10)
+  # sleep(5)
   system('clear')
   home_screen
 end

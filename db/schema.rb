@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171115171341) do
+ActiveRecord::Schema.define(version: 20171116204741) do
 
-  create_table "beeringredients", force: :cascade do |t|
+  create_table "beer_ingredients", force: :cascade do |t|
     t.integer "beer_id"
     t.integer "ingredient_id"
   end
@@ -23,7 +23,6 @@ ActiveRecord::Schema.define(version: 20171115171341) do
     t.integer "abv"
     t.string  "description"
     t.string  "isorganic"
-    t.integer "rating"
     t.string  "api_key"
     t.integer "brewery_id"
   end
