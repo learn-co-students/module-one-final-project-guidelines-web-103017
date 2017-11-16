@@ -40,9 +40,9 @@ class CLI
         if yesno == "yes"
           system("open", Waterbody.find_by(name: input_name).url)
         end
+        system 'clear'
       end
     end
-    system 'clear'
   end
 
   def self.input_2
@@ -52,7 +52,7 @@ class CLI
     if !County.find_by(name: input_name)
       puts("Hmmmm... Sorry, we don't have info on that county")
     else
-      output = County.find_by(name: input_name).fish.collect{|x|x[:name]}.to_sentence
+      output = County.find_by(name: input_name).fish.collect{|x|x[:name]}.uniq.to_sentence
       puts("You can find #{output.titleize} in #{input_name.titleize} County")
     end
   end
@@ -99,7 +99,7 @@ class CLI
 
   def self.invalid_input
     system 'clear'
-    puts "Your input is invalid"
+    puts "Your input is invalid. Please try again."
   end
 
 
