@@ -21,7 +21,7 @@ class CLI
     5 - Exit /n")
   end
 
-  #Paul's original
+  # #Paul original
   # def give_em_what_they_want(characteristic_name, to_know, type)
   #   puts("Which #{characteristic_name} would you like to see #{to_know} for?")
   #   input_name = gets.chomp.downcase
@@ -32,22 +32,29 @@ class CLI
   #     puts("You can find #{output} in #{input_name}")
   #   end
   # end
+  #
+  # def self.give_em_what_they_want(characteristic_name, to_know)
+  #   puts("Which #{characteristic_name} would you like to see #{to_know} for?")
+  #   input_name = gets.chomp.downcase
+  #   if !characteristic_name.find_by(name: input_name)
+  #     puts("Hmmmm... Sorry, we don't have info on that #{characteristic_name}")
+  #   else
+  #     output = characteristic_name.find_by(name: input_name).to_know.collect{|x|x[:name]}.to_sentence
+  #     puts("You can find #{output} in #{input_name}")
+  #   end
+  # end
 
-  def self.give_em_what_they_want(characteristic_name, to_know)
-    puts("Which #{characteristic_name} would you like to see #{to_know} for?")
-    input_name = gets.chomp.downcase
-    if !characteristic_name.find_by(name: input_name)
-      puts("Hmmmm... Sorry, we don't have info on that #{characteristic_name}")
-    else
-      output = characteristic_name.find_by(name: input_name).to_know.collect{|x|x[:name]}.to_sentence
-      puts("You can find #{output} in #{input_name}")
-    end
-  end
-
-  #these don't work - 2nd arg is a method and you cant pass a method as an argument
+  # these don't work - 2nd arg is a method and you cant pass a method as an argument
   # I think that's the error anyway
   def self.input_1
-    give_em_what_they_want(Waterbody, fishes)
+    puts("Which bady of water would you like to see fish for?")
+    input_name = gets.chomp.downcase
+    if !Waterbody.find_by(name: input_name)
+      puts("Hmmmm... Sorry, we don't have info on that body of water")
+    else
+      output = Waterbody.find_by(name: input_name).fish.collect{|x|x[:name]}.to_sentence
+      puts("You can find #{output} in #{input_name}")
+    end
   end
 
   def self.input_2
