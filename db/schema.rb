@@ -10,7 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 5) do
+ActiveRecord::Schema.define(version: 20171116162533) do
+
+  create_table "amenities", force: :cascade do |t|
+    t.string "name"
+  end
 
   create_table "counties", force: :cascade do |t|
     t.string "name"
@@ -27,6 +31,11 @@ ActiveRecord::Schema.define(version: 5) do
 
   create_table "waterbodies", force: :cascade do |t|
     t.string "name"
+  end
+
+  create_table "waterbody_amenities", force: :cascade do |t|
+    t.integer "waterbody_id"
+    t.integer "amenity_id"
   end
 
   create_table "waterbody_fishes", force: :cascade do |t|

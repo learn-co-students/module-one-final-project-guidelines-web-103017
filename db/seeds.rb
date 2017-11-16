@@ -29,3 +29,18 @@ responses.each do |row|
     CountyWaterbody.create(waterbody_id: water_id, county_id: county_id)
   end
 end
+
+def amenity_to_array(string)
+  string.split("-").collect{|x|x.strip.downcase}
+end
+
+responses.each do |row|
+  water_id = Waterbody.find_or_create_by(name: row["water"].downcase).id
+  if row["ammenities"]
+    amenity_to_array(row["ammenities"]).each do |amenity|
+      #binding.pry
+      amenity_id = Amenity.find_or_create_by(name: amenity).id
+      WaterbodyAmenity.create(waterbody_id: water_id, amenity_id: amenity_id)
+    end
+  end
+end
