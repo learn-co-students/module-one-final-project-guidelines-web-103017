@@ -5,11 +5,11 @@ end
 
 
 def home_menu
-  " 
+  "
   1. Explore Beers
   2. Explore Breweries
   3. View Favorite Beers
-  4. Exit
+  4. Exit the program
 
   Please enter a number:
   "
@@ -24,10 +24,15 @@ def home_input(input)
   when "3"
     view_favorite_beers
   when "4"
-    exit
+    goodbye
   else
     throw_error
     home_input(get_input)
   end
 end
 
+def goodbye
+  puts "Goodbye!"
+  sleep(2)
+  exit
+end

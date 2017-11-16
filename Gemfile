@@ -9,5 +9,6 @@ gem "pry"
 gem 'rest-client'
 gem 'json'
 gem 'faraday'
+gem 'validates_zipcode'
 
 gem "require_all"
