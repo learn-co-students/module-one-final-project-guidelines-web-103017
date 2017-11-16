@@ -3,13 +3,13 @@ class DbSeed
   KEY = "?key=c7eeca86b7a750a8aec2f89d33460b52"
   BASE_API = "http://api.brewerydb.com/v2"
 
-  def self.seed_breweries
+  def self.seed_breweries(pages=10)
     Brewery.destroy_all
     breweries_url = "#{BASE_API}/breweries/#{KEY}&withLocations=Y"
     num_pages = self.total_pages(breweries_url)
 
     counter = 1
-    while counter <= num_pages
+    while counter <=  (pages < num_pages ? pages : num_pages) 
       brewery_url = "#{BASE_API}/breweries/#{KEY}&p=#{counter}&withLocations=Y"
 
       if self.http_success(brewery_url)
@@ -57,7 +57,6 @@ class DbSeed
               abv: beer.fetch("abv", 0).to_i,
               description: beer.dig("style", "description") ? beer["style"]["description"] : "",
               isorganic: beer.fetch("isOrganic", ""),
-              rating: 0,
               api_key: beer.fetch("id", ""),
               brewery_id: brewery.id
               )
@@ -94,7 +93,7 @@ class DbSeed
   end
 
   def self.seed_beeringredients
-    Beeringredient.destroy_all
+    BeerIngredient.destroy_all
     Beer.all.each do |beer|
       beerkey = beer.api_key
       beeringredient_url = "#{BASE_API}/beer/#{beerkey}/ingredients/#{KEY}"
@@ -103,7 +102,7 @@ class DbSeed
         if beeringredients != nil
           beeringredients.each do |beeringredient|
             if Ingredient.find_by(api_id: "#{beeringredient["id"]}") != nil
-              Beeringredient.create(
+              BeerIngredient.create(
               beer_id: beer.id,
               ingredient_id: Ingredient.find_by(api_id: "#{beeringredient["id"]}").id
             )
