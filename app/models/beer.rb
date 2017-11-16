@@ -8,7 +8,6 @@ class Beer < ActiveRecord::Base
     puts "Name: #{self.name}"
     puts "Style: #{self.style}"
     puts "ABV: #{self.abv}"
-    puts "Rating: #{self.rating}"
     puts "Organic? #{self.isorganic}"
     puts "Description: #{self.description}
     ~~~ "

@@ -10,7 +10,8 @@ def breweries_menu
   "
   1. Find Breweries by Zip Code
   2. Find Breweries by City
-  3. Exit the program
+  3. Return to Home Screen
+  4. Exit the program
 
   Please enter a number:
   "
@@ -23,6 +24,8 @@ def breweries_input(input)
   when "2"
     find_breweries_by_city
   when "3"
+    home_screen
+  when "4"
     goodbye
   else
     throw_error
@@ -65,7 +68,7 @@ def find_breweries_by_city
     parse_breweries(breweries)
     city_what_now
   else
-    puts "There are no breweries in your zip code, try searching by another City"
+    puts "There are no breweries in your city, try searching by another city"
     sleep(2)
     explore_breweries
   end

@@ -1,4 +1,5 @@
 def home_screen
+  system('clear')
   puts home_menu
   home_input(get_input)
 end

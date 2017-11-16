@@ -18,6 +18,7 @@ def beer_menu
  2. Search for beers by keywords
  3. View our Beer of the Day!
  4. View Favorite Beers
+ 5. Return to Home Screen
 
  Please enter a number:"
  beer_menu_input(get_input)
@@ -33,6 +34,8 @@ def beer_menu_input(input)
     random_beer
   when "4"
     view_favorite_beers
+  when "5"
+    home_screen
   else
     puts throw_error
     beer_menu_input(get_input)
@@ -67,15 +70,16 @@ end
 
 # <-- DB QUERIES --> 
 def top_rated_beers
-  puts "Here are the 5 top rated beers! Enjoy!
+  puts "Here are the top 10 rated beers! Enjoy!
   "
 
-  # top_beers = UserBeer.
-  # # order(:rating).reverse_order.limit(5)
+  top_beers = UserBeer.select("id, beer_id, AVG(rating) as rating_avg").group(:beer_id).order("AVG(rating) desc").limit(10)
 
-  # top_beers.each do |beer| 
-  #   beer.print_beer_info
-  # end
+  top_beers.each do |user_beer|
+    beer = Beer.find_by(id: user_beer.beer_id)
+    puts "Rating #{user_beer.rating_avg}" 
+    beer.print_beer_info
+  end
 
   beer_dir
 end
@@ -85,7 +89,7 @@ def search_keyword_beers
 
   search_words = get_input.delete(",").split(" ")
 
-  found_beers = Beer.where("description LIKE '%#{search_words[0]}%' AND description LIKE '%#{search_words[1]}%' AND description LIKE '%#{search_words[2]}%'").limit(3)
+  found_beers = Beer.where("description LIKE '%#{search_words[0]}%' OR description LIKE '%#{search_words[1]}%' OR description LIKE '%#{search_words[2]}%'").limit(3)
 
   found_beers.each {|beer| beer.print_beer_info}
 
@@ -108,7 +112,7 @@ def random_beer
       |        |- '
       .========.   "
 
-  sleep(3)
+  sleep(2)
   random = rand((Beer.first.id.to_i)..(Beer.last.id.to_i))
   beer = Beer.all.select{|beer| beer.id == random}
   
@@ -118,23 +122,62 @@ def random_beer
 end
 
 def save_beer
-  # have user enter name of beer
-  # find beer again
-  # have user rate beer
-  # update rating of beer
-  # save beer to favorites of user in userbeer
-
   puts "Please enter the name of a beer you would like to save!"
   input = get_input
   if Beer.find_by(name: input) == nil
     puts "Sorry, we could not find your beer. Please check the name and try again."
-    save_beer
-  else
+    sleep(5)
+    explore_beers
+  else 
+    beer_found = Beer.find_by(name: input)
     puts "Please rate this beer on a scale from 1-5"
-
-    Beer.rating = 5
+    rating_input = get_input
+    if !(1..5).include?(rating_input.to_i)
+      puts "Please enter a valid number"
+      save_beer
+    else
+      if UserBeer.find_by(beer_id: beer_found.id, user_id: @@user.id)
+        puts "You have already rated this beer!"
+        sleep(8)
+        explore_beers
+      else
+        UserBeer.create(
+          beer_id: beer_found.id,
+          user_id: @@user.id,
+          rating: rating_input.to_i
+          )
+        puts "Thank you for saving your beer! Taking you back to the menu for more options..."
+        sleep(8)
+        explore_beers
+      end
+    end
   end
+end
 
+
+def view_beer_ingredients
+  puts "Please enter the name of the beer for which you would like to view the ingredients!"
+  input = get_input
+
+  if Beer.find_by(name: input) == nil
+    puts "Sorry, we could not find your beer. Please check the name and try again."
+    sleep(5)
+    explore_beers
+  else
+    beer_found = Beer.find_by(name: input)
+    beer_ingredients = beer_found.ingredients
+    if beer_ingredients.any?
+      beer_ingredients.each do |ingredient|
+        puts ingredient["name"]
+      end
+      sleep(8)
+      explore_beers
+    else
+      puts "This beer does not have any listed ingredients. Sorry!"
+      sleep (8)
+      explore_beers
+    end
+  end
 end
 
 

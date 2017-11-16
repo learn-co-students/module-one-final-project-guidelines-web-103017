@@ -1,4 +1,4 @@
 class BeerIngredient < ActiveRecord::Base
-  belongs_to :ingredients
-  belongs_to :beers
+  belongs_to :ingredient
+  belongs_to :beer
 end

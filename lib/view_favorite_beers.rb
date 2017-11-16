@@ -7,7 +7,7 @@ def view_favorite_beers
     end
     what_now
   else
-    puts "You don't have any saved beer"
+    puts "You don't have any saved beers :("
     what_now
   end
 end
