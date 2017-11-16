@@ -16,7 +16,8 @@ def introduction
 end
 
 def welcome
-  "     Hello and welcome to Beer Bud!
+  "     
+        Hello and welcome to Beer Bud!
 
         What would you like to do today?
 
