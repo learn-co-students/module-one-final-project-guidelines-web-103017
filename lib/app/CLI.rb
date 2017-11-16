@@ -11,7 +11,7 @@ class CLI
     puts("1 - Tell me all the species of fish available in a NY body of water /n
     2 - Tell me all the species of fish available in a NY county /n
     3 - Tell me all the New York counties with a specific species of fish /n
-    4 - Tell me all the waterbodies in a New York county /n
+    4 - Tell me all the bodies of water in a New York county /n
     5 - Exit /n")
   end
 
@@ -51,7 +51,7 @@ class CLI
       puts("Hmmmm... Sorry, we don't have info on that body of water")
     else
       output = Waterbody.find_by(name: input_name).fish.collect{|x|x[:name]}.to_sentence
-      puts("You can find #{output} in #{input_name}")
+      puts("You can find #{output.titleize} in #{input_name.titleize}")
     end
   end
 
@@ -62,16 +62,28 @@ class CLI
       puts("Hmmmm... Sorry, we don't have info on that county")
     else
       output = County.find_by(name: input_name).fish.collect{|x|x[:name]}.to_sentence
-      puts("You can find #{output} in #{input_name} county")
+      puts("You can find #{output.titleize} in #{input_name.titleize} County")
     end
   end
 
   def self.input_3
-    give_em_what_they_want(County, fishes)
-  end
+    puts("Which species of fish would you like to see counties for?")
+    input_name = gets.chomp.downcase
+    if !Fish.find_by(name: input_name)
+      puts("Hmmmm... Sorry, we don't have info on that fish species")
+    else
+      output = Fish.find_by(name: input_name).counties.collect{|x|x[:name]}.to_sentence
+      puts("#{output.titleize} counties have #{input_name.titleize}") #if one switch have to has and counties to county
+    end
 
   def self.input_4
-    give_em_what_they_want(Waterbody, counties)
+    puts("Which county in New York would you like to see all the bodies of water for?")
+    input_name = gets.chomp.downcase
+    if !County.find_by(name: input_name)
+      puts("Hmmmm... Sorry, we don't have info on that county")
+    else
+      output = County.find_by(name: input_name).waterbodies.collect{|x|x[:name]}.to_sentence
+      puts("#{input_name.titleize} are in #{output.titleize} County")
   end
 
   def self.invalid_input
