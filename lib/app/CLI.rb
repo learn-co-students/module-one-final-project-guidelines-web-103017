@@ -14,7 +14,6 @@ class CLI
     puts "3 - Tell me all the New York counties with a specific species of fish"
     puts "4 - Tell me all the bodies of water in a New York county"
     puts "5 - Tell me all the bodies of water that have a specific amenity"
-
     puts "6 - Exit"
   end
 
@@ -35,12 +34,15 @@ class CLI
       output = Waterbody.find_by(name: input_name).fish.collect{|x|x[:name]}.to_sentence
       puts("You can find #{output.titleize} in #{input_name.titleize}")
       puts("In case you were wondering, #{input_name.titleize} has a #{amenities}.")
-      puts("Would you like to visit the #{input_name.titleize} website? (yes or no)")
-      yesno = gets.chomp.downcase
-      if yesno == "yes"
-        system("open", Waterbody.find_by(name: input_name).url)
+      if Waterbody.find_by(name: input_name).url
+        puts("Would you like to visit the #{input_name.titleize} website? (yes or no)")
+        yesno = gets.chomp.downcase
+        if yesno == "yes"
+          system("open", Waterbody.find_by(name: input_name).url)
+        end
       end
     end
+    system 'clear'
   end
 
   def self.input_2
@@ -84,10 +86,11 @@ class CLI
     puts "If you would like to search for more than one, please separate by commas."
     puts "Options include: boat rental, campsite, fishing pier, or marina"
     input_name = gets.chomp.downcase.split(",").collect{|x|x.strip.downcase}
-    # system 'clear'
+    #system 'clear'
     inputs_as_objects = input_name.collect{|input| Amenity.find_by(name: input)}
-    waterbody_objects = Waterbody.all.select{|x| x.amenities & inputs_as_objects == inputs_as_objects}
-    binding.pry
+    waterbody_objects = Waterbody.all.select do |x|
+      (x.amenities & inputs_as_objects).compact.sort_by{|x| x.name} == inputs_as_objects.compact.sort_by{|x| x.name}
+    end
     waterbody_objects.each do |waterbody|
       puts("#{waterbody.name.titleize} - #{waterbody.counties.collect{|x|x.name.titleize}.to_sentence}")
     end
@@ -127,7 +130,6 @@ class CLI
     input = gets.chomp.to_i
     system 'clear'
     while input != 6 && input != "exit"
-      #binding.pry
       command(input)
       regreet
       choices

@@ -1,7 +1,7 @@
 class ASCII
 
   def self.small_fish
-      puts <<-Art
+      art =  <<-Art
 
                                          _J""-.
              .-""L_                     /o )   \ ,';
@@ -10,10 +10,11 @@ class ASCII
         ;_/"`.__.-"
 
         Art
+        puts art.blue
   end
 
   def self.large_fish
-      puts <<-Art
+      art = <<-Art
 
       ,-.           ,.---'''^\                  O
      {   \       ,__\,---'''''`-.,      O    O
@@ -27,6 +28,7 @@ class ASCII
                         ~~~
 
         Art
+        puts art.blue
   end
 
 end
