@@ -13,26 +13,26 @@ class User < ActiveRecord::Base
 	
 	# def initialize
 	# 	@missing_ingredients = 2
-	# 	self.all_cocktails = nil
+	# 	all_cocktails = nil
 	# end
 
-	def missing_ingredients
-		@missing_ingredients
-	end
+	# def missing_ingredients
+	# 	@missing_ingredients
+	# end
 
-	def missing_ingredients=(missing_ingredients)
-		@missing_ingredients = missing_ingredients
-	end
+	# def missing_ingredients=(missing_ingredients)
+	# 	@missing_ingredients = missing_ingredients
+	# end
 
-	def all_cocktails
-		@all_cocktails
-	end
+	# def all_cocktails
+	# 	@all_cocktails
+	# end
 
-	def all_cocktails=(all_cocktails)
-		@all_cocktails = all_cocktails
-	end
+	# def all_cocktails=(all_cocktails)
+	# 	@all_cocktails = all_cocktails
+	# end
 
-	def add_ingredients(array)
+	def add_ingredients(array) #Adds ingredients to user in DB in ingredient does not exist already
 		array.each do |ingredient|
 			ingredient.downcase
 			new_ingredient = Ingredient.find_or_create_by(name: ingredient)
@@ -44,15 +44,16 @@ class User < ActiveRecord::Base
 
 	def findrecipes
 		
-		ingredients = self.ingredients.map{|x| x.name}
+		ingredients = self.ingredients.map{|x| x.name} #takes the Users ingredients and creates an array
 		
 		recipe_hash = {}
-		ingredients.each do |x|
-			recipes = RestClient.get("http://www.thecocktaildb.com/api/json/v1/1/filter.php?i=#{x}")
+
+		ingredients.each do |ingredient| #iterates over users ingredients
+			recipes = RestClient.get("http://www.thecocktaildb.com/api/json/v1/1/filter.php?i=#{ingredient}")#queries API and finds all cocktails that have that ingredient 
 			no_ingredients = (recipes.to_s == "")
 			if no_ingredients == false
 				parser = JSON.parse(recipes)
-				recipe_hash[x] = parser
+				recipe_hash[ingredient] = parser
 			end
 		end
 
@@ -65,15 +66,15 @@ class User < ActiveRecord::Base
 		# recipe_perm = recipe_perm.flatten(1)
 
 		recipe_hash.keys.each do |ingredient|
-			recipe_hash[ingredient] = recipe_hash[ingredient]['drinks'].map{|x| x['strDrink']}
+			recipe_hash[ingredient] = recipe_hash[ingredient]['drinks'].map{|x| x['strDrink']} #retrieves the recipe names from the JSON response
 		end
 
-		self.all_cocktails = Hash.new{|hash,key| hash[key]=[]}
+		all_cocktails = Hash.new{|hash,key| hash[key]=[]}
 
-		recipe_hash.each do |ingredient,v|
+		recipe_hash.each do |ingredient,v| #this reverses the hash relationships to Recipe Name => Ingredients
 			recipe_hash[ingredient].each do |recipe|
 				recipe_name = I18n.transliterate(recipe)
-				self.all_cocktails[recipe_name] << ingredient
+				all_cocktails[recipe_name] << ingredient
 			end
 		end
 
@@ -101,26 +102,24 @@ class User < ActiveRecord::Base
 		# recipes.each{|k,v| v.compact!}
 
 		# recipes.each do |ingredients,recipe_names|
-		self.all_cocktails.each do |id, ingredients|
-			response = RestClient.get("http://www.thecocktaildb.com/api/json/v1/1/search.php?s=#{id}")
+		all_cocktails.each do |name, ingredients| #finds the cocktail ingredients by querying the API
+			response = RestClient.get("http://www.thecocktaildb.com/api/json/v1/1/search.php?s=#{name}")
 			cocktail_ing = JSON.parse(response)
 			ingredient = cocktail_ing['drinks'][0].map{|ids,ingredient| ingredient.downcase if ingredient && ids.include?("strIngredient")}.compact!
 			ingredient.reject!(&:empty?)
-			self.all_cocktails[id] << ingredient
-			self.all_cocktails[id].flatten!.uniq!
-			#binding.pry
+			all_cocktails[name] << ingredient #adds to recipe table
+			all_cocktails[name].flatten!.uniq! 
 		end
 	                 
-		 self.all_cocktails = Hash[self.all_cocktails.sort_by do |k,v|
+		 all_cocktails = Hash[all_cocktails.sort_by do |k,v| #sorting our cocktail recipes by the amount of missing ingredients
 		 	duplicate = v 
 		     arr = duplicate - ingredients.to_a 
 		     arr.length
 		   end  
 		 ] 
 
-
-		 self.all_cocktails.each do |recipe_id,ingredients|
-		 	recipe = Recipe.find_or_create_by(name: recipe_id)
+		 all_cocktails.each do |recipe_name,ingredients| #creates recipes in our recipe table
+		 	recipe = Recipe.find_or_create_by(name: recipe_name)
 		 	ingredients.each do |recipe_ingredient|
 		 		recipe.ingredients << Ingredient.find_or_create_by(name: recipe_ingredient)
 		 	end
@@ -128,15 +127,15 @@ class User < ActiveRecord::Base
 		 	self.recipes << recipe
 		 end
 
-		 self.missing_ingredients = self.all_cocktails
+		 missing_ingredients = all_cocktails
 		 	
-		 self.missing_ingredients = Hash[self.missing_ingredients.sort_by do |k,v|
+		 missing_ingredients = Hash[missing_ingredients.sort_by do |k,v|
 		  	arr = v&ingredients.to_a
 		  	arr.each{|el| v.delete(el)}
 		    end  
 		  ]
 
-		self.all_cocktails.each do |k,v|
+		all_cocktails.each do |k,v| #outputs the recipe name and the ingredient missing
 			puts "#{k}"
 			puts ""
 			puts "#{v.length} ingredients missing"
@@ -146,9 +145,9 @@ class User < ActiveRecord::Base
 
 	end
 
-	def select_recipe(recipe_id)
+	def select_recipe(recipe_name)#find the recipe in the database
 
-		response = RestClient.get("http://www.thecocktaildb.com/api/json/v1/1/search.php?s=#{recipe_id}")
+		response = RestClient.get("http://www.thecocktaildb.com/api/json/v1/1/search.php?s=#{recipe_name}")
 		details = JSON.parse(response)
 
 		puts '	  .'
@@ -177,36 +176,40 @@ class User < ActiveRecord::Base
 		ingredient_measure.each{|k,v| puts k +' - ' +v}
 		puts "Should be served in: #{details['drinks'][0]['strGlass']}"
 		puts "Instuctions: #{details['drinks'][0]['strInstructions']}"
-		puts "You appear to be missing: "
-		puts "-------------------------"
-		#binding.pry
 		missing = self.ingredients.collect{|x| x.name}
 		m_i = ingredients-missing
-		puts m_i
+		puts "-------------------------"
 
-		puts "Would like to find these ingredients at Walmart®?"
-		input = gets.chomp
-		if input.downcase=='yes' || input.downcase=='y' 
-		 	find_at_localmarket(m_i)
+		if m_i.length > 0
+			puts "You appear to be missing: "
+			puts "-------------------------"
+			
+			puts m_i
+
+			puts "Would like to find these ingredients at Walmart®? Type in 'y' or 'yes' for yes. Type anything to continue otherwise."
+			input = gets.chomp
+			if input.downcase=='yes' || input.downcase=='y' 
+			 	find_at_localmarket(m_i)
+			end
+		else
+			puts "You have all the ingredients for this recipe! Enjoy!"
+			"-------------------------"
 		end
 
 	end
 
-	def find_at_localmarket(array)
+	def find_at_localmarket(array) #takes missing cocktail ingredients plugs them into the WalMart API
 
 		array.each do |ingredient|
 			response = RestClient.get("http://api.walmartlabs.com/v1/search?apiKey=7vp7x9xjzp8fnb2smkhmhzhv&query=#{ingredient}")
 			parsed = JSON.parse(response)
-			#binding.pry
 			if parsed && parsed['message'] != "Results not found!" || parsed['message'] == nil
 				puts "We found #{parsed['items'].first['name']} at Walmart for $#{parsed['items'].first['salePrice']}"
 				puts "-----------------------"
 			else
-
 				puts "We couldn't find #{ingredient}"
 				puts "-----------------------"
 			end
-
 		end
 	end
 
