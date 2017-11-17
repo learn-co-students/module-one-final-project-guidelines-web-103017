@@ -11,14 +11,14 @@ __          __  _                            _          ____                   _
 
 ## App Description
 
-Beer Bud is your best friend when it comes to finding local breweries and beers! Beer Bud allows you to search for breweries by location (City and Zip Code). Beer bud allows you to find beers from your favorite breweries as well as discover new beers! Users can search by keyword or browse the highest rated beers in our user database. Beer Bud also allows you to save and rate your favorite beers to your profile, so that you can curate your own library of favorite beers!
+Beer Bud is your best friend when it comes to finding local breweries and beers! Beer Bud allows you to search for breweries by location (City and Zip Code). Beer bud allows you to find beers from your favorite breweries as well as discover new beers! Users can search by keyword or browse the highest rated beers in our user database. Beer Bud also allows you to save and rate your favorite beers to your profile, so that you can curate your own library of favorite beers! For a video demo of our app, please view our video here:(https://youtu.be/73g5aMxYBDQ).
 
 The scope of our data is pulled from the BreweryDB API, available at http://www.brewerydb.com/developers.
 The API has roughly the following volumes of data:
   - Beers: 70,000+ individual beers
   - Breweries: 9500+ individual breweries
 
-The API allows you to page through the data, returning 50 records per page. 
+The API allows you to page through the data, returning 50 records per page.
 
 ### Install Instructions
 
@@ -30,11 +30,11 @@ The API allows you to page through the data, returning 50 records per page.
     - use Rake -T to view options
     - run these rake tasks in the following order:
     - rake populate:breweries_sample n
-        -n is the number of random pages you wish to seed from the API; we recommend 5 or less (the default value is 10)
+        (n is the number of random pages you wish to seed from the API; we recommend 5 or less (the default value is 10))
     - rake populate:beers
     - rake populate:ingredients
     - rake populate user_beers
-        -user_beers does take an optional argument if you would like to specify the number of randomly populated user_beer instances (the default value is 100)
+        (user_beers does take an optional argument if you would like to specify the number of randomly populated user_beer instances (the default value is 100))
     - rake populate beer_ingredients
 5. The run file is in bin/run.rb - type `ruby bin/run.rb` from the top level directory of the project to run Beer Bud!
 
@@ -48,11 +48,11 @@ The API allows you to page through the data, returning 50 records per page.
       - use Rake -T to view options
       - run these rake tasks in the following order:
       - rake populate:breweries
-          -(note: this will populate your database with the full volume of 9500+ breweries from the API, which means that the corresponding counts of beers and beer ingredients will be quite significant and may take some time.)
+          (note: this will populate your database with the full volume of 9500+ breweries from the API, which means that the corresponding counts of beers and beer ingredients will be quite significant and may take some time.)
       - rake populate:beers
       - rake populate:ingredients
       - rake populate user_beers
-          -user_beers does take an optional argument if you would like to specify the number of randomly populated user_beer instances (the default value is 100)
+          (user_beers does take an optional argument if you would like to specify the number of randomly populated user_beer instances (the default value is 100))
       - rake populate beer_ingredients
 5. The run file is in bin/run.rb - type `ruby bin/run.rb` from the top level directory of the project to run Beer Bud!
 
