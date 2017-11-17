@@ -1,5 +1,8 @@
 require 'json'
 require 'rest-client'
+require 'i18n'
+require 'nokogiri'
+require 'open-uri'
 
 
 class User < ActiveRecord::Base
@@ -62,16 +65,19 @@ class User < ActiveRecord::Base
 		# recipe_perm = recipe_perm.flatten(1)
 
 		recipe_hash.keys.each do |ingredient|
-			recipe_hash[ingredient] = recipe_hash[ingredient]['drinks'].map{|x| x['idDrink']}
+			recipe_hash[ingredient] = recipe_hash[ingredient]['drinks'].map{|x| x['strDrink']}
 		end
 
 		self.all_cocktails = Hash.new{|hash,key| hash[key]=[]}
 
 		recipe_hash.each do |ingredient,v|
-			recipe_hash[ingredient].each do |recipe_id|
-				self.all_cocktails[recipe_id] << ingredient
+			recipe_hash[ingredient].each do |recipe|
+				recipe_name = I18n.transliterate(recipe)
+				self.all_cocktails[recipe_name] << ingredient
 			end
 		end
+
+		#binding.pry
 
 
 		#recipe_hash
@@ -96,7 +102,7 @@ class User < ActiveRecord::Base
 
 		# recipes.each do |ingredients,recipe_names|
 		self.all_cocktails.each do |id, ingredients|
-			response = RestClient.get("http://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=#{id}")
+			response = RestClient.get("http://www.thecocktaildb.com/api/json/v1/1/search.php?s=#{id}")
 			cocktail_ing = JSON.parse(response)
 			ingredient = cocktail_ing['drinks'][0].map{|ids,ingredient| ingredient.downcase if ingredient && ids.include?("strIngredient")}.compact!
 			ingredient.reject!(&:empty?)
@@ -112,11 +118,6 @@ class User < ActiveRecord::Base
 		   end  
 		 ] 
 
-		 # self.missing_ingredients = Hash[self.all_cocktails.sort_by do |k,v|
-		 # 	arr = v&ingredients.to_a
-		 # 	arr.each{|el| v.delete(el)}
-		 #   end  
-		 # ]
 
 		 self.all_cocktails.each do |recipe_id,ingredients|
 		 	recipe = Recipe.find_or_create_by(name: recipe_id)
@@ -127,13 +128,40 @@ class User < ActiveRecord::Base
 		 	self.recipes << recipe
 		 end
 
-		self.all_cocktails
+		 self.missing_ingredients = self.all_cocktails
+		 	
+		 self.missing_ingredients = Hash[self.missing_ingredients.sort_by do |k,v|
+		  	arr = v&ingredients.to_a
+		  	arr.each{|el| v.delete(el)}
+		    end  
+		  ]
+
+		self.all_cocktails.each do |k,v|
+			puts "#{k}"
+			puts ""
+			puts "#{v.length} ingredients missing"
+			puts "------------------------------"
+		end
+
+
 	end
 
 	def select_recipe(recipe_id)
 
-		response = RestClient.get("http://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=#{recipe_id}")
+		response = RestClient.get("http://www.thecocktaildb.com/api/json/v1/1/search.php?s=#{recipe_id}")
 		details = JSON.parse(response)
+
+		puts '	  .'
+		puts '	  .'
+		puts '	 . .'
+		puts '	  ...'
+		puts '	\~~~~~/'
+		puts '	 \   /'
+		puts '	  \ /'
+		puts '    	   V'
+		puts '	   |'
+		puts '	   |'
+		puts '	  ---'
 
 		puts "Name: #{details['drinks'][0]['strDrink']} (#{details['drinks'][0]['strAlcoholic']})"
 
@@ -150,29 +178,36 @@ class User < ActiveRecord::Base
 		puts "Should be served in: #{details['drinks'][0]['strGlass']}"
 		puts "Instuctions: #{details['drinks'][0]['strInstructions']}"
 		puts "You appear to be missing: "
-		puts self.missing_ingredients[recipe_id]
-		# puts "Would like to find these ingredients at your Wal-mart®?"
-		# input = gets.chomp
-		# if input.downcase=='yes' || input.downcase=='y'
-		# 	puts "We need your Location. Input you 5 digit ZIP-CODE: "
-		# 	input = gets.chomp
-		# 	input.to_i
-		# 	while input < 5 || input > 5
-		# 		puts "Incorrect :( ZIP-CODE please try again: "
-		# 		input = gets.chomp
-		# 		input.to_i
-		# 	end
-		# 	self.location = input
-		# 	find_at_walmart(self.missing_ingredients[recipe_id])
-		# end
+		puts "-------------------------"
+		#binding.pry
+		missing = self.ingredients.collect{|x| x.name}
+		m_i = ingredients-missing
+		puts m_i
+
+		puts "Would like to find these ingredients at Walmart®?"
+		input = gets.chomp
+		if input.downcase=='yes' || input.downcase=='y' 
+		 	find_at_localmarket(m_i)
+		end
 
 	end
 
-	# def find_at_walmart([array])
-	# 	array.each do |ingredient|
+	def find_at_localmarket(array)
 
+		array.each do |ingredient|
+			response = RestClient.get("http://api.walmartlabs.com/v1/search?apiKey=7vp7x9xjzp8fnb2smkhmhzhv&query=#{ingredient}")
+			parsed = JSON.parse(response)
+			#binding.pry
+			if parsed && parsed['message'] != "Results not found!" || parsed['message'] == nil
+				puts "We found #{parsed['items'].first['name']} at Walmart for $#{parsed['items'].first['salePrice']}"
+				puts "-----------------------"
+			else
 
-	# 	end
-	# end
+				puts "We couldn't find #{ingredient}"
+				puts "-----------------------"
+			end
+
+		end
+	end
 
 end

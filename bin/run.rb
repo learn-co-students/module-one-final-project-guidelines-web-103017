@@ -1,14 +1,13 @@
 require_relative '../config/environment'
 
-# printf '   *                              
-#  (  `                             
-#  )\))(   (      )      (          
-# ((_)()\  )\  ( /(      )\  `  )   
-# (_()((_)((_) )\())  _ ((_) /(/(   
-# |  \/  | (_)((_)\  | | | |((_)_\  
-# | |\/| | | |\ \ /  | |_| || '_ \) 
-# |_|  |_| |_|/_\_\   \___/ | .__/  
-#                           |_| '
+puts '	(  `     	'                 
+puts '	)\))(  (     )      (     '	  
+puts '	((_)()\ )\ ( /(      )\ `  )  	'
+puts '	(_()((_|(_))\())  _ ((_) /(/(  	 '
+puts '	|  \/  |(_|(_)\  | | | | ((_)_\  	'
+puts '	| |\/| || \ \ /  | |_| | | |_ \) 	'
+puts '	|_|  |_||_/_\_\   \___/  | .__/  	'
+puts '				 |_|    '
 
 class NewIn
 
@@ -19,13 +18,14 @@ class NewIn
 
 		puts "Hello #{user.name} start by adding ingredients separated by comma:"
 		input = gets.chomp
-		array = input.downcase.split(', ').reject(&:empty?)
-
+		array = input.downcase.split(/\s+|,\s*/)
+		array.reject!(&:empty?)
+		#binding.pry
 		user.add_ingredients(array)
 
 		puts "You can now find recipes by your Ingredients with the command 'find'." 
 		puts "To select a recipe type 'select' followed by your desired recipe name." 
-		puts "To add MOAR Ingredients type 'MOAR'" 
+		puts "To add more ingredients type 'MOAR'" 
 		puts "And type 'Q' at any time to Quit" 
 
 		while input != "q"
@@ -54,7 +54,7 @@ class NewIn
 				
 				puts "To Begin Add Ingredients separated by comma:"
 				input = gets.chomp
-				array = input.downcase.split(',').reject(&:empty?)
+				array = input.downcase.split(/\s+|,\s*/).reject!(&:empty?)
 
 				user.add_ingredients(array)
 				puts "You can now find recipes by your Ingredients with the command 'find'." 
