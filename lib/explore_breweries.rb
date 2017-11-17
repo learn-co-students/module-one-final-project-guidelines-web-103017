@@ -112,7 +112,7 @@ def zip_what_now
   when "3"
     goodbye
   else
-    puts "Please provide a valid input:"
+    throw_error
     zip_return_menu
   end
 end
@@ -138,7 +138,7 @@ def city_what_now
   when "3"
     goodbye
   else
-    puts "Please provide a valid input:"    
+    throw_error
     city_return_menu
   end
 end

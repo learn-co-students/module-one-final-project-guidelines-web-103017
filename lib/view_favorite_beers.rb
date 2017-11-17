@@ -33,7 +33,7 @@ def what_now
   when "3"
     goodbye
   else
-    puts "Please try again and pick a valid option:"
+    throw_error
     what_now
   end
 end

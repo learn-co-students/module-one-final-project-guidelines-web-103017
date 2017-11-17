@@ -3,13 +3,13 @@ class DbSeed
   KEY = "?key=c7eeca86b7a750a8aec2f89d33460b52"
   BASE_API = "http://api.brewerydb.com/v2"
 
-  def self.seed_breweries(pages=10)
+  def self.seed_breweries
     Brewery.destroy_all
     breweries_url = "#{BASE_API}/breweries/#{KEY}&withLocations=Y"
     num_pages = self.total_pages(breweries_url)
 
     counter = 1
-    while counter <=  (pages < num_pages ? pages : num_pages) 
+    while counter <= num_pages
       brewery_url = "#{BASE_API}/breweries/#{KEY}&p=#{counter}&withLocations=Y"
 
       if self.http_success(brewery_url)
@@ -37,6 +37,42 @@ class DbSeed
           counter += 1
       else
         counter += 1
+      end
+    end
+  end
+
+  def self.seed_breweries_sample(pages=10)
+    Brewery.destroy_all
+    breweries_url = "#{BASE_API}/breweries/#{KEY}&withLocations=Y"
+    num_pages = self.total_pages(breweries_url)
+
+    pages_array = (1..num_pages).to_a.sample(pages)
+
+    pages_array.each do |page|
+      brewery_url = "#{BASE_API}/breweries/#{KEY}&p=#{page}&withLocations=Y"
+
+      if self.http_success(brewery_url)
+        all_breweries = self.api_data(brewery_url)
+
+        all_breweries.each do |brewery|
+          if brewery["locations"] != nil
+            Brewery.create(
+              name: brewery.fetch("name", ""),
+              description: brewery.fetch("description", ""),
+              classification: brewery.fetch("brandClassification", ""),
+              established: brewery.fetch("established", 0000).to_i,
+              website: brewery.fetch("website", ""),
+              latitude: brewery["locations"].first.fetch("latitude", 0.0),
+              longitude: brewery["locations"].first.fetch("longitude", 0.0),
+              address: brewery["locations"].first.fetch("streetAddress", ""),
+              city: brewery["locations"].first.fetch("locality", ""),
+              state: brewery["locations"].first.fetch("region", ""),
+              country: brewery["locations"].first.fetch("countryIsoCode", ""),
+              postalcode: brewery["locations"].first.fetch("postalCode", ""),
+              api_key: brewery.fetch("id", "")
+              )
+          end
+        end
       end
     end
   end
@@ -109,6 +145,23 @@ class DbSeed
             end
           end
         end
+      end
+    end
+  end
+
+  def self.seed_user_beer(rows=100)
+    UserBeer.destroy_all
+    beer_ids = (Beer.minimum(:id)..Beer.maximum(:id)).to_a
+    user_ids = (User.minimum(:id)..User.maximum(:id)).to_a
+    ratings = (1..5).to_a
+
+    while rows > 0
+      new_beer_id = beer_ids.sample
+      new_user_id = user_ids.sample
+      new_rating = ratings.sample
+      if !UserBeer.find_by(beer_id: new_beer_id, user_id: new_user_id)
+        UserBeer.create(beer_id: new_beer_id, user_id: new_user_id, rating: new_rating)
+        rows -= 1
       end
     end
   end

@@ -1,6 +1,6 @@
 # Beer Bud - Module One Final Project
 
-tag line / blurb here 
+tag line / blurb here
 
 ## App Description
 
@@ -12,5 +12,5 @@ install instructions here
 
 ### Contributors Guide
 
-contributors guide 
+contributors guide
 include link to license for code (??)

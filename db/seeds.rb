@@ -21,30 +21,29 @@ User.create(name: 'Silvia Chung', city: 'New York', state: 'New York', zipcode: 
 User.create(name: 'Tashawn Williams', city: 'New York', state: 'New York', zipcode: 10019, country: 'United States')
 User.create(name: 'Yuliya Yasenetska', city: 'New York', state: 'New York', zipcode: 10019, country: 'United States')
 
-# User 1 has many favorited / rated beers
-UserBeer.create(beer_id: 14, user_id: 1, rating: 5)
-UserBeer.create(beer_id: 28, user_id: 1, rating: 4)
-UserBeer.create(beer_id: 30, user_id: 1, rating: 3)
-UserBeer.create(beer_id: 44, user_id: 1, rating: 5)
-UserBeer.create(beer_id: 58, user_id: 1, rating: 5)
-
-# Many ratings for many beers
-UserBeer.create(beer_id: 6, user_id: 2, rating: 5)
-UserBeer.create(beer_id: 7, user_id: 2, rating: 3)
-UserBeer.create(beer_id: 8, user_id: 2, rating: 2)
-UserBeer.create(beer_id: 9, user_id: 2, rating: 5)
-
-UserBeer.create(beer_id: 22, user_id: 3, rating: 1)
-UserBeer.create(beer_id: 17, user_id: 3, rating: 4)
-UserBeer.create(beer_id: 19, user_id: 4, rating: 2)
-
-# Beer 14 has many ratings from many users
-UserBeer.create(beer_id: 14, user_id: 5, rating: 2)
-UserBeer.create(beer_id: 14, user_id: 6, rating: 3)
-UserBeer.create(beer_id: 14, user_id: 7, rating: 5)
-
-UserBeer.create(beer_id: 20, user_id: 1, rating: 5)
-
+# # User 1 has many favorited / rated beers
+# UserBeer.create(beer_id: 14, user_id: 1, rating: 5)
+# UserBeer.create(beer_id: 28, user_id: 1, rating: 4)
+# UserBeer.create(beer_id: 30, user_id: 1, rating: 3)
+# UserBeer.create(beer_id: 44, user_id: 1, rating: 5)
+# UserBeer.create(beer_id: 58, user_id: 1, rating: 5)
+#
+# # Many ratings for many beers
+# UserBeer.create(beer_id: 6, user_id: 2, rating: 5)
+# UserBeer.create(beer_id: 7, user_id: 2, rating: 3)
+# UserBeer.create(beer_id: 8, user_id: 2, rating: 2)
+# UserBeer.create(beer_id: 9, user_id: 2, rating: 5)
+#
+# UserBeer.create(beer_id: 22, user_id: 3, rating: 1)
+# UserBeer.create(beer_id: 17, user_id: 3, rating: 4)
+# UserBeer.create(beer_id: 19, user_id: 4, rating: 2)
+#
+# # Beer 14 has many ratings from many users
+# UserBeer.create(beer_id: 14, user_id: 5, rating: 2)
+# UserBeer.create(beer_id: 14, user_id: 6, rating: 3)
+# UserBeer.create(beer_id: 14, user_id: 7, rating: 5)
+#
+# UserBeer.create(beer_id: 20, user_id: 1, rating: 5)
 
 # Brewery.destroy_all
 #
