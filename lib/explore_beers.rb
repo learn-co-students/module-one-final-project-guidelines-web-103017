@@ -2,7 +2,7 @@ def explore_beers
   beer_menu
 end
 
-# <-- MENUS & INPUT CONTROLS --> 
+# <-- MENUS & INPUT CONTROLS -->
 def beer_menu
   system('clear')
   puts "
@@ -11,7 +11,7 @@ def beer_menu
   .~~~~.
   i====i_
   |cccc|_)
-  |cccc|  
+  |cccc|
   `-==-'
 
  1. List Top Rated Beers
@@ -37,7 +37,7 @@ def beer_menu_input(input)
   when "5"
     home_screen
   else
-    puts throw_error
+    throw_error
     beer_menu_input(get_input)
   end
 end
@@ -54,7 +54,7 @@ def beer_dir_input(input)
     puts "Goodbye!"
     exit
   else
-    puts throw_error
+    throw_error
     beer_dir_input(get_input)
   end
 end
@@ -68,7 +68,7 @@ def beer_dir
   beer_dir_input(get_input)
 end
 
-# <-- DB QUERIES --> 
+# <-- DB QUERIES -->
 def top_rated_beers
   puts "Here are the top 10 rated beers! Enjoy!
   "
@@ -77,7 +77,7 @@ def top_rated_beers
 
   top_beers.each do |user_beer|
     beer = Beer.find_by(id: user_beer.beer_id)
-    puts "Rating #{user_beer.rating_avg}" 
+    puts "Rating #{user_beer.rating_avg}"
     beer.print_beer_info
   end
 
@@ -87,13 +87,25 @@ end
 def search_keyword_beers
   puts "Please enter 3 keyword beer characteristics you would like to search by. For example, 'low malt flavor', 'herb and spice flavors', 'medium hop bitterness' are possible search queries."
 
-  search_words = get_input.delete(",").split(" ")
+  # search_words = get_input.delete(",").split(" ")
+  #
+  # found_beers = Beer.where("description LIKE '%#{search_words[0]}%' OR description LIKE '%#{search_words[1]}%' OR description LIKE '%#{search_words[2]}%'").limit(3)
+  #
+  # found_beers.each {|beer| beer.print_beer_info}
 
-  found_beers = Beer.where("description LIKE '%#{search_words[0]}%' OR description LIKE '%#{search_words[1]}%' OR description LIKE '%#{search_words[2]}%'").limit(3)
+  search_words =  get_input.split(/[\s,]+/)
 
-  found_beers.each {|beer| beer.print_beer_info}
+  found_beers = search_words.map do |word|
+    Beer.where("description LIKE '%#{word}%'").limit(100)
+  end.flatten
 
-  beer_dir 
+  if found_beers.any?
+    found_beers.sample(5).each {|beer| beer.print_beer_info}
+  else
+    puts "Sorry! Could not find any beer with that description"
+  end
+
+  beer_dir
 end
 
 def random_beer
@@ -115,7 +127,7 @@ def random_beer
   sleep(2)
   random = rand((Beer.first.id.to_i)..(Beer.last.id.to_i))
   beer = Beer.all.select{|beer| beer.id == random}
-  
+
   beer.first.print_beer_info
 
   beer_dir
@@ -128,7 +140,7 @@ def save_beer
     puts "Sorry, we could not find your beer. Please check the name and try again."
     sleep(5)
     explore_beers
-  else 
+  else
     beer_found = Beer.find_by(name: input)
     puts "Please rate this beer on a scale from 1-5"
     rating_input = get_input
@@ -179,25 +191,3 @@ def view_beer_ingredients
     end
   end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

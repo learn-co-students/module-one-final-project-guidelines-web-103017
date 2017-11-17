@@ -27,7 +27,7 @@ def home_input(input)
   when "4"
     goodbye
   else
-    puts throw_error
+    throw_error
     home_input(get_input)
   end
 end

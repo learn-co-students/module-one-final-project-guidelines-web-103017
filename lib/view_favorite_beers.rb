@@ -30,7 +30,7 @@ def what_now
   when "2"
     goodbye
   else
-    puts "Please pick a valid option"
+    throw_error
     what_now
   end
 end

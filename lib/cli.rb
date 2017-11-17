@@ -16,7 +16,7 @@ def introduction
 end
 
 def welcome
-  "     
+  "
         Hello and welcome to Beer Bud!
 
         What would you like to do today?
@@ -24,7 +24,7 @@ def welcome
         1. Login to existing account
         2. Create a new account
         3. Exit program
-        
+
         Please enter a number:
   "
 end
@@ -43,14 +43,14 @@ def welcome_input(input)
     create_account
   when "3"
     exit
-  else 
-    puts throw_error
+  else
+    throw_error
     welcome_input(get_input)
   end
 end
 
 def throw_error
-  "You have entered an invalid selection. Please try again."
+  puts "You have entered an invalid selection. Please try again."
 end
 
 def runner
@@ -59,26 +59,3 @@ def runner
   puts welcome
   welcome_input(get_input)
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
