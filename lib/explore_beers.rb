@@ -62,10 +62,11 @@ def beer_dir_input(input)
 end
 
 def beer_dir
-  puts "If you would like to view ingredients of these beers, please enter 1.
-  If you would like to rate and favorite any beers, please enter 2. <3
-  To return to the beer menu, please enter 3.
-  To exit the program, please type 'exit'.
+  puts "
+  If you would like to view ingredients of these beers, please enter 1
+  If you would like to rate and favorite any beers, please enter 2
+  To return to the beer menu, please enter 3
+  To exit the program, please type 'exit'
   "
   beer_dir_input(get_input)
 end
@@ -150,14 +151,14 @@ def save_beer
       puts "Please enter a valid number"
       save_beer
     else
-      if UserBeer.find_by(beer_id: beer_found.id, user_id: @@user.id)
+      if UserBeer.find_by(beer_id: beer_found.id, user_id: @user.id)
         puts "You have already rated this beer!"
         sleep(8)
         explore_beers
       else
         UserBeer.create(
           beer_id: beer_found.id,
-          user_id: @@user.id,
+          user_id: @user.id,
           rating: rating_input.to_i
           )
         puts "Thank you for saving your beer! Taking you back to the menu for more options..."
@@ -187,7 +188,7 @@ def view_beer_ingredients
       sleep(8)
       explore_beers
     else
-      puts "This beer does not have any listed ingredients. Sorry!"
+      puts "This beer does not have any listed ingredients. Sorry! Taking you back to Home Menu now...."
       sleep (5)
       explore_beers
     end

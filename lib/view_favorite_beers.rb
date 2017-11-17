@@ -1,9 +1,9 @@
 def view_favorite_beers
-  beers = @@user.beers
+  beers = @user.beers
   if beers.any?
   puts "These are your favorite beers!"
     beers.each_with_index do |beer, index|
-      puts "#{index+1}. Name: #{beer.name}, Your Rating: #{UserBeer.find_by(user_id: @@user.id, beer_id: beer.id).rating}"
+      puts "#{index+1}. Name: #{beer.name}, Your Rating: #{UserBeer.find_by(user_id: @user.id, beer_id: beer.id).rating}"
     end
     what_now
   else

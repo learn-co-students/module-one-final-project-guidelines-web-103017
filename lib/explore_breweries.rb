@@ -59,8 +59,8 @@ def find_breweries_by_zip
       zip_what_now
     else
       puts "Sorry, there are no breweries in your zip code, please try again."
-      sleep(2)
-      zip_return_menu
+      zip_what_now
+
     end
 
   else
@@ -82,8 +82,7 @@ def find_breweries_by_city
     city_what_now
   else
     puts "There are no breweries in your city, try searching by another city"
-    sleep(2)
-    city_return_menu
+    city_what_now
   end
 end
 
@@ -92,7 +91,8 @@ def valid_input(input)
 end
 
 def zip_return_menu
-  "1. Find Breweries by Zip Code
+  "
+  1. Find Breweries by Zip Code
   2. Return to Explore Breweries
   3. Exit
 
@@ -118,7 +118,8 @@ def zip_what_now
 end
 
 def city_return_menu
-  "1. Find Breweries by City
+  "
+  1. Find Breweries by City
   2. Return to Explore Breweries
   3. Exit
 

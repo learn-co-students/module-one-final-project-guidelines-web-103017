@@ -36,6 +36,6 @@ def create_user(username)
     zipcode: zipcode,
     country: country)
 
-  @@user = User.find_by(name: username)
+  @user = User.find_by(name: username)
   puts "Thank you, #{username}! We are now returning you to the menu so you can browse beers and breweries!"
 end
