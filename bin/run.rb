@@ -54,7 +54,8 @@ class NewIn
 				
 				puts "To Begin Add Ingredients separated by comma:"
 				input = gets.chomp
-				array = input.downcase.split(/\s+|,\s*/).reject!(&:empty?)
+				array = input.downcase.split(/\s+|,\s*/)
+				array.reject!(&:empty?)
 
 				user.add_ingredients(array)
 				puts "You can now find recipes by your Ingredients with the command 'find'." 
