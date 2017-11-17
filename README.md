@@ -11,14 +11,14 @@ __          __  _                            _          ____                   _
 
 ## App Description
 
-Beer Bud is your best friend when it comes to finding local breweries and beers! Beer Bud allows you to search for breweries by location (City and Zip Code). Beer bud allows you to find beers from your favorite breweries, by keyword, and the highest rated beers in our user database. Beer Bud allows you to save and rate your favorite beers to your profile.
+Beer Bud is your best friend when it comes to finding local breweries and beers! Beer Bud allows you to search for breweries by location (City and Zip Code). Beer bud allows you to find beers from your favorite breweries as well as discover new beers! Users can search by keyword or browse the highest rated beers in our user database. Beer Bud also allows you to save and rate your favorite beers to your profile, so that you can curate your own library of favorite beers!
 
-The scope of our data is pulled from the BreweryDB API, available at http://www.brewerydb.com/developers
+The scope of our data is pulled from the BreweryDB API, available at http://www.brewerydb.com/developers.
 The API has roughly the following volumes of data:
   - Beers: 70,000+ individual beers
   - Breweries: 9500+ individual breweries
 
-The API allows you to page through the data, returning 50 records per page
+The API allows you to page through the data, returning 50 records per page. 
 
 ### Install Instructions
 
@@ -56,6 +56,7 @@ The API allows you to page through the data, returning 50 records per page
       - rake populate beer_ingredients
 5. The run file is in bin/run.rb - type `ruby bin/run.rb` from the top level directory of the project to run Beer Bud!
 
+---
 
 ### Contributors Guide
 This project is licensed under the MIT license. See LICENSE.txt for more details.
