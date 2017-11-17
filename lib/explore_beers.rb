@@ -5,20 +5,20 @@ end
 # <-- MENUS & INPUT CONTROLS --> 
 def beer_menu
   system('clear')
-  puts "
-  Welcome to Explore Beers!
+  puts "Welcome to Explore Beers!
 
-  .~~~~.
-  i====i_
-  |cccc|_)
-  |cccc|  
-  `-==-'
+        .~~~~.
+        i====i_
+        |cccc|_)
+        |cccc|  
+        `-==-'
 
  1. List Top Rated Beers
  2. Search for beers by keywords
  3. View our Beer of the Day!
  4. View Favorite Beers
  5. Return to Home Screen
+ 6. Exit the program
 
  Please enter a number:"
  beer_menu_input(get_input)
@@ -36,6 +36,8 @@ def beer_menu_input(input)
     view_favorite_beers
   when "5"
     home_screen
+  when "6"
+    goodbye
   else
     puts throw_error
     beer_menu_input(get_input)
@@ -70,7 +72,7 @@ end
 
 # <-- DB QUERIES --> 
 def top_rated_beers
-  puts "Here are the top 10 rated beers! Enjoy!
+  puts "~~* Here are the top 10 beers as rated by our users! Enjoy! *~~
   "
 
   top_beers = UserBeer.select("id, beer_id, AVG(rating) as rating_avg").group(:beer_id).order("AVG(rating) desc").limit(10)
@@ -174,7 +176,7 @@ def view_beer_ingredients
       explore_beers
     else
       puts "This beer does not have any listed ingredients. Sorry!"
-      sleep (8)
+      sleep (5)
       explore_beers
     end
   end

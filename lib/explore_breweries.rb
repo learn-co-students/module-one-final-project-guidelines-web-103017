@@ -7,14 +7,27 @@ end
 private
 
 def breweries_menu
-  "
+"                                     ^!^
+         _._._._._._._._._._._._._._._._._   ^
+         | ___   ___    ___    ___   ___ |
+     ^!^ ||_|_| |_|_|  |_|_|  |_|_| |_|_||
+         |IIIII_IIIII__IIIII__IIIII_IIIII|      ^
+         | ___   ___    ___    ___   ___ |
+ )o(_    ||_|_| |_|_|  |_|_|  |_|_| |_|_||
+/(|)\    |IIIII_IIIII__IIIII__IIIII_IIIII|
+  H)o(_  | ___   ___    ___    ___   ___ |
+  /(|)\  ||_|_| |_|_|  |_|_|  |_|_| |_|_||
+  H H    |IIIII_IIIII__IIIII__IIIII_IIIII|    /)
+  H H    | ___   ___   _____   ___   ___ | __/ ),
+   ~ ^~^ ||_|_| |_|_|  o~|~o  |_|_| |_|_||  ~^~^
+  . ' .'.|IIIII_IIIII__|_|_|__IIIII_IIIII|'^~^'.',
+
   1. Find Breweries by Zip Code
   2. Find Breweries by City
   3. Return to Home Screen
   4. Exit the program
 
-  Please enter a number:
-  "
+  Please enter a number:"
 end
 
 def breweries_input(input)
@@ -45,9 +58,9 @@ def find_breweries_by_zip
       parse_breweries(breweries)
       zip_what_now
     else
-      puts "There are no breweries in your zip code, try searching by City"
+      puts "Sorry, there are no breweries in your zip code, please try again."
       sleep(2)
-      explore_breweries
+      zip_return_menu
     end
 
   else
@@ -70,7 +83,7 @@ def find_breweries_by_city
   else
     puts "There are no breweries in your city, try searching by another city"
     sleep(2)
-    explore_breweries
+    city_return_menu
   end
 end
 
@@ -79,8 +92,7 @@ def valid_input(input)
 end
 
 def zip_return_menu
-  "
-  1. Find Breweries by Zip Code
+  "1. Find Breweries by Zip Code
   2. Return to Explore Breweries
   3. Exit
 
@@ -106,8 +118,7 @@ def zip_what_now
 end
 
 def city_return_menu
-  "
-  1. Find Breweries by City
+  "1. Find Breweries by City
   2. Return to Explore Breweries
   3. Exit
 
@@ -133,12 +144,12 @@ def city_what_now
 end
 
 def parse_breweries(breweries)
-  puts "These are the closest breweries to you (at most 5)"
+  puts "These are the closest breweries to you (at most 5):"
   breweries.each_with_index do |brewery,index|
     puts "#{index+1}. #{brewery.name}, #{brewery.address}, #{brewery.website}"
     if brewery.beers.any?
-      puts "#{brewery.name} has the following beers"
-      brewery.beers.each_with_index{|beer| puts "#{beer.name}"}
+      puts "#{brewery.name} produces the following beers:"
+      brewery.beers.each_with_index{|beer| puts "   #{beer.name}"}
       puts "#{}"
     else
       puts "No Beers currently listed for #{brewery.name}"

@@ -2,7 +2,7 @@ def create_account
   puts "Please enter your first and last name:"
   username = get_input
   if user_exist(username)
-    puts "Looks like you have an account, please log in from main menu"
+    puts "Looks like you already have an account! Please log in from the main menu :)"
     sleep(3)
     runner
   else
@@ -37,5 +37,5 @@ def create_user(username)
     country: country)
 
   @@user = User.find_by(name: username)
-  puts "Thank you, #{username}! You can now return to the menu and browse beers and breweries!"
+  puts "Thank you, #{username}! We are now returning you to the menu so you can browse beers and breweries!"
 end

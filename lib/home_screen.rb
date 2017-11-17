@@ -6,7 +6,20 @@ end
 
 
 def home_menu
-  "
+  "  o©ºº©oo©oº°©           
+    /           \          
+    |___________|____      
+    |            |____)     
+    |  B E E R   |  | |     
+    |            |  | |     
+    |   F O R    |  | |     
+    |            |  | |     
+    |   Y O U    |  | |     
+    |            |__|_|     
+    |            |____)     
+    |____________|          
+   (______________)         
+
   1. Explore Beers
   2. Explore Breweries
   3. View Favorite Beers
