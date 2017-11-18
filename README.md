@@ -21,7 +21,7 @@ The API has roughly the following volumes of data:
 The API allows you to page through the data, returning 50 records per page.
 
 ### Install Instructions
-1. Run bundle instll from the top level directory
+1. Run `bundle install` from the top level directory
 
 #### Running App with sample set of data
 1. Git clone the repository
