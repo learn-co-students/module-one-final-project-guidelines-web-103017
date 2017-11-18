@@ -1,49 +1,66 @@
-# Module One Final Project Guidelines
+# Beer Bud - Module One Final Project
+```
+__          __  _                            _          ____                   ____            _ 
+ \ \        / / | |                          | |        |  _ \                 |  _ \          | |
+  \ \  /\  / /__| | ___ ___  _ __ ___   ___  | |_ ___   | |_) | ___  ___ _ __  | |_) |_   _  __| |
+   \ \/  \/ / _ \ |/ __/ _ \| '_ ` _ \ / _ \ | __/ _ \  |  _ < / _ \/ _ \ '__| |  _ <| | | |/ _` |
+    \  /\  /  __/ | (_| (_) | | | | | |  __/ | || (_) | | |_) |  __/  __/ |    | |_) | |_| | (_| |
+     \/  \/ \___|_|\___\___/|_| |_| |_|\___|  \__\___/  |____/ \___|\___|_|    |____/ \__,_|\__,_|
+                                                                                               
+```
 
-Congratulations, you're at the end of module one! You've worked crazy hard to get here and have learned a ton.
+## App Description
 
-For your final project, we'll be building a Command Line database application.
+Beer Bud is your best friend when it comes to finding local breweries and beers! Beer Bud allows you to search for breweries by location (City and Zip Code). Beer bud allows you to find beers from your favorite breweries as well as discover new beers! Users can search by keyword or browse the highest rated beers in our user database. Beer Bud also allows you to save and rate your favorite beers to your profile, so that you can curate your own library of favorite beers! For a video demo of our app, please view our video here:(https://youtu.be/73g5aMxYBDQ).
 
-## Project Requirements
+The scope of our data is pulled from the BreweryDB API, available at http://www.brewerydb.com/developers.
+The API has roughly the following volumes of data:
+  - Beers: 70,000+ individual beers
+  - Breweries: 9500+ individual breweries
 
-### Option One - Data Analytics Project
+The API allows you to page through the data, returning 50 records per page.
 
-1. Access a Sqlite3 Database using ActiveRecord.
-2. You should have at minimum three models including one join model. This means you must have a many-to-many relationship.
-3. You should seed your database using data that you collect either from a CSV, a website by scraping, or an API.
-4. Your models should have methods that answer interesting questions about the data. For example, if you've collected info about movie reviews, what is the most popular movie? What movie has the most reviews?
-5. You should provide a CLI to display the return values of your interesting methods.  
-6. Use good OO design patterns. You should have separate classes for your models and CLI interface.
+### Install Instructions
+1. Run `bundle install` from the top level directory
 
-### Option Two - Command Line CRUD App
+#### Running App with sample set of data
+1. Git clone the repository
+2. Run `rake db:migrate` from the top level directory of the project
+3. Run `rake db:seed` from the top level directory of the project
+4. To populate the database with sample data:
+    - use Rake -T to view options
+    - run these rake tasks in the following order:
+    - `rake populate:breweries_sample n`
+        (n is the number of random pages you wish to seed from the API; we recommend 5 or less (the default value is 10))
+    - `rake populate:beers`
+    - `rake populate:ingredients`
+    - `rake populate user_beers`
+        (user_beers does take an optional argument if you would like to specify the number of randomly populated user_beer instances (the default value is 100))
+    - `rake populate beer_ingredients`
+5. The run file is in bin/run.rb - type `ruby bin/run.rb` from the top level directory of the project to run Beer Bud!
 
-1. Access a Sqlite3 Database using ActiveRecord.
-2. You should have a minimum of three models.
-3. You should build out a CLI to give your user full CRUD ability for at least one of your resources. For example, build out a command line To-Do list. A user should be able to create a new to-do, see all todos, update a todo item, and delete a todo. Todos can be grouped into categories, so that a to-do has many categories and categories have many to-dos.
-4. Use good OO design patterns. You should have separate models for your runner and CLI interface.
 
-### Brainstorming and Proposing a Project Idea
 
-Projects need to be approved prior to launching into them, so take some time to brainstorm project options that will fulfill the requirements above.  You must have a minimum of four [user stories](https://en.wikipedia.org/wiki/User_story) to help explain how a user will interact with your app.  A user story should follow the general structure of `"As a <role>, I want <goal/desire> so that <benefit>"`. In example, if we were creating an app to randomly choose nearby restaurants on Yelp, we might write:
+#### Running App with full volume of data
+  1. Git clone the repository
+  2. Run `rake db:migrate` from the top level directory of the project
+  3. Run `rake db:seed` from the top level directory of the project
+  4. To populate the database with sample data:
+      - use Rake -T to view options
+      - run these rake tasks in the following order:
+      - `rake populate:breweries`
+          (note: this will populate your database with the full volume of 9500+ breweries from the API, which means that the corresponding counts of beers and beer ingredients will be quite significant and may take some time.)
+      - `rake populate:beers`
+      - `rake populate:ingredients`
+      - `rake populate user_beers`
+          (user_beers does take an optional argument if you would like to specify the number of randomly populated user_beer instances (the default value is 100))
+      - `rake populate beer_ingredients`
+5. The run file is in bin/run.rb - type `ruby bin/run.rb` from the top level directory of the project to run Beer Bud!
 
-* As a user, I want to be able to enter my name to retrieve my records
-* As a user, I want to enter a location and be given a random nearby restaurant suggestion
-* As a user, I should be able to reject a suggestion and not see that restaurant suggestion again
-* As a user, I want to be able to save to and retrieve a list of favorite restaurant suggestions
+---
 
-## Instructions
+### Contributors Guide
+This project is licensed under the MIT license. See LICENSE.txt for more details.
 
-1. Fork and clone this repository.
-2. Build your application. Make sure to commit early and commit often. Commit messages should be meaningful (clearly describe what you're doing in the commit) and accurate (there should be nothing in the commit that doesn't match the description in the commit message). Good rule of thumb is to commit every 3-7 mins of actual coding time. Most of your commits should have under 15 lines of code and a 2 line commit is perfectly acceptable.
-3. Make sure to create a good README.md with a short description, install instructions, a contributors guide and a link to the license for your code.
-4. Make sure your project checks off each of the above requirements.
-5. Prepare a video demo (narration helps!) describing how a user would interact with your working project.
-    * The video should:
-      - Have an overview of your project.(2 minutes max)
-6. Prepare a presentation to follow your video.(3 minutes max)
-    * Your presentation should:
-      - Describe something you struggled to build, and show us how you ultimately implemented it in your code.
-      - Discuss 3 things you learned in the process of working on this project.
-      - Address, if anything, what you would change or add to what you have today?
-      - Present any code you would like to highlight.   
-7. *OPTIONAL, BUT RECOMMENDED*: Write a blog post about the project and process.
+
+Contributors: Connie Wang, Priyam Sarma
