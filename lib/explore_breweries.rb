@@ -150,8 +150,7 @@ def parse_breweries(breweries)
     puts "#{index+1}. #{brewery.name}, #{brewery.address}, #{brewery.website}"
     if brewery.beers.any?
       puts "#{brewery.name} produces the following beers:"
-      brewery.beers.each_with_index{|beer| puts "   #{beer.name}"}
-      puts "#{}"
+      brewery.beers.each{|beer| puts "   #{beer.name}"}
     else
       puts "No Beers currently listed for #{brewery.name}"
     end

@@ -53,8 +53,7 @@ def beer_dir_input(input)
   when "3"
     beer_menu
   when "exit"
-    puts "Goodbye!"
-    exit
+    goodbye
   else
     throw_error
     beer_dir_input(get_input)
@@ -76,7 +75,7 @@ def top_rated_beers
   puts "~~* Here are the top 10 beers as rated by our users! Enjoy! *~~
   "
 
-  top_beers = UserBeer.select("id, beer_id, AVG(rating) as rating_avg").group(:beer_id).order("AVG(rating) desc").limit(10)
+  top_beers = UserBeer.select("id, beer_id, AVG(rating) as rating_avg").group(:beer_id).order("rating_avg desc").limit(10)
 
   top_beers.each do |user_beer|
     beer = Beer.find_by(id: user_beer.beer_id)
@@ -99,11 +98,15 @@ def search_keyword_beers
   search_words =  get_input.split(/[\s,]+/)
 
   found_beers = search_words.map do |word|
-    Beer.where("description LIKE '%#{word}%'").limit(100)
+    Beer.where("description LIKE '%#{word}%'")
   end.flatten
 
   if found_beers.any?
-    found_beers.sample(5).each {|beer| beer.print_beer_info}
+    found_beers_hash = found_beers.inject(Hash.new(0)){|output, beer| output[beer.name] += 1; output}
+    beers_to_print = found_beers_hash.sort_by{|k,v| v}.last(5)
+    puts ""
+    beers_to_print.each{|beer| Beer.find_by(name: beer[0].to_s).print_beer_info}
+    # sample(5).each {|beer| beer.print_beer_info}
   else
     puts "Sorry! Could not find any beer with that description"
   end
@@ -141,7 +144,7 @@ def save_beer
   input = get_input
   if Beer.find_by(name: input) == nil
     puts "Sorry, we could not find your beer. Please check the name and try again."
-    sleep(5)
+    sleep(3)
     explore_beers
   else
     beer_found = Beer.find_by(name: input)
@@ -153,7 +156,7 @@ def save_beer
     else
       if UserBeer.find_by(beer_id: beer_found.id, user_id: @user.id)
         puts "You have already rated this beer!"
-        sleep(8)
+        sleep(3)
         explore_beers
       else
         UserBeer.create(
@@ -168,7 +171,6 @@ def save_beer
     end
   end
 end
-
 
 def view_beer_ingredients
   puts "Please enter the name of the beer for which you would like to view the ingredients!"

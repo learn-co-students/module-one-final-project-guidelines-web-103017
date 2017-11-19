@@ -6,19 +6,19 @@ end
 
 
 def home_menu
-  "  o©ºº©oo©oº°©           
-    /           \          
-    |___________|____      
-    |            |____)     
-    |  B E E R   |  | |     
-    |            |  | |     
-    |   F O R    |  | |     
-    |            |  | |     
-    |   Y O U    |  | |     
-    |            |__|_|     
-    |            |____)     
-    |____________|          
-   (______________)         
+  "  o©ºº©oo©oº°©
+    /           \
+    |___________|____
+    |            |____)
+    |  B E E R   |  | |
+    |            |  | |
+    |   F O R    |  | |
+    |            |  | |
+    |   Y O U    |  | |
+    |            |__|_|
+    |            |____)
+    |____________|
+   (______________)
 
   1. Explore Beers
   2. Explore Breweries
@@ -43,10 +43,4 @@ def home_input(input)
     throw_error
     home_input(get_input)
   end
-end
-
-def goodbye
-  puts "Goodbye!"
-  sleep(2)
-  exit
 end

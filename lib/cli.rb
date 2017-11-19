@@ -42,7 +42,7 @@ def welcome_input(input)
     system('clear')
     create_account
   when "3"
-    exit
+    goodbye
   else
     throw_error
     welcome_input(get_input)
@@ -58,4 +58,10 @@ def runner
   puts introduction
   puts welcome
   welcome_input(get_input)
+end
+
+def goodbye
+  puts "Goodbye!"
+  sleep(2)
+  exit
 end

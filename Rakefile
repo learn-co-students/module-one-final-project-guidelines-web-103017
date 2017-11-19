@@ -13,7 +13,7 @@ namespace :populate do
     DbSeed.seed_breweries
   end
 
-  desc 'populate breweries table with sample API data'
+  desc 'populate breweries table with sample API data for n pages'
   task :breweries_sample do
     ARGV.each {|a| task a.to_sym do; end}
     DbSeed.seed_breweries_sample(ARGV[1].to_i)

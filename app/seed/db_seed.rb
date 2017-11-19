@@ -4,7 +4,7 @@ class DbSeed
   BASE_API = "http://api.brewerydb.com/v2"
 
   def self.seed_breweries
-    Brewery.destroy_all
+    # Brewery.destroy_all
     breweries_url = "#{BASE_API}/breweries/#{KEY}&withLocations=Y"
     num_pages = self.total_pages(breweries_url)
 
@@ -16,25 +16,9 @@ class DbSeed
         all_breweries = self.api_data(brewery_url)
 
         all_breweries.each do |brewery|
-          if brewery["locations"] != nil
-            Brewery.create(
-              name: brewery.fetch("name", ""),
-              description: brewery.fetch("description", ""),
-              classification: brewery.fetch("brandClassification", ""),
-              established: brewery.fetch("established", 0000).to_i,
-              website: brewery.fetch("website", ""),
-              latitude: brewery["locations"].first.fetch("latitude", 0.0),
-              longitude: brewery["locations"].first.fetch("longitude", 0.0),
-              address: brewery["locations"].first.fetch("streetAddress", ""),
-              city: brewery["locations"].first.fetch("locality", ""),
-              state: brewery["locations"].first.fetch("region", ""),
-              country: brewery["locations"].first.fetch("countryIsoCode", ""),
-              postalcode: brewery["locations"].first.fetch("postalCode", ""),
-              api_key: brewery.fetch("id", "")
-              )
-            end
-          end
-          counter += 1
+          Brewery.find_or_create_by(self.brewery_hash(brewery)) if brewery["locations"] != nil
+        end
+        counter += 1
       else
         counter += 1
       end
@@ -42,7 +26,7 @@ class DbSeed
   end
 
   def self.seed_breweries_sample(pages=10)
-    Brewery.destroy_all
+    # Brewery.destroy_all
     breweries_url = "#{BASE_API}/breweries/#{KEY}&withLocations=Y"
     num_pages = self.total_pages(breweries_url)
 
@@ -55,30 +39,14 @@ class DbSeed
         all_breweries = self.api_data(brewery_url)
 
         all_breweries.each do |brewery|
-          if brewery["locations"] != nil
-            Brewery.create(
-              name: brewery.fetch("name", ""),
-              description: brewery.fetch("description", ""),
-              classification: brewery.fetch("brandClassification", ""),
-              established: brewery.fetch("established", 0000).to_i,
-              website: brewery.fetch("website", ""),
-              latitude: brewery["locations"].first.fetch("latitude", 0.0),
-              longitude: brewery["locations"].first.fetch("longitude", 0.0),
-              address: brewery["locations"].first.fetch("streetAddress", ""),
-              city: brewery["locations"].first.fetch("locality", ""),
-              state: brewery["locations"].first.fetch("region", ""),
-              country: brewery["locations"].first.fetch("countryIsoCode", ""),
-              postalcode: brewery["locations"].first.fetch("postalCode", ""),
-              api_key: brewery.fetch("id", "")
-              )
-          end
+          Brewery.find_or_create_by(self.brewery_hash(brewery)) if brewery["locations"] != nil
         end
       end
     end
   end
 
   def self.seed_beers
-    Beer.destroy_all
+    # Beer.destroy_all
     Brewery.all.each do |brewery|
       brewery_key = brewery.api_key
       brewery_beers_url = "#{BASE_API}/brewery/#{brewery_key}/beers/#{KEY}"
@@ -87,15 +55,7 @@ class DbSeed
         all_beers = self.api_data(brewery_beers_url)
         if all_beers != nil
           all_beers.each do |beer|
-            Beer.create(
-              name: beer.fetch("name", ""),
-              style: beer.dig("style", "name") ? beer["style"]["name"] : "",
-              abv: beer.fetch("abv", 0).to_i,
-              description: beer.dig("style", "description") ? beer["style"]["description"] : "",
-              isorganic: beer.fetch("isOrganic", ""),
-              api_key: beer.fetch("id", ""),
-              brewery_id: brewery.id
-              )
+            Beer.find_or_create_by(self.beer_hash(beer,brewery))
           end
         end
       end
@@ -103,7 +63,7 @@ class DbSeed
   end
 
   def self.seed_ingredients
-    Ingredient.destroy_all
+    # Ingredient.destroy_all
 
     ingredients_url = "#{BASE_API}/ingredients/#{KEY}"
     # cap it at 20?
@@ -117,7 +77,7 @@ class DbSeed
         all_ingredients = self.api_data(ingredient_url)
 
         all_ingredients.each do |ingredient|
-          Ingredient.create(
+          Ingredient.find_or_create_by(
             name: ingredient.fetch("name", ""),
             api_id: ingredient.fetch("id", 0))
         end
@@ -129,7 +89,7 @@ class DbSeed
   end
 
   def self.seed_beeringredients
-    BeerIngredient.destroy_all
+    # BeerIngredient.destroy_all
     Beer.all.each do |beer|
       beerkey = beer.api_key
       beeringredient_url = "#{BASE_API}/beer/#{beerkey}/ingredients/#{KEY}"
@@ -137,12 +97,8 @@ class DbSeed
         beeringredients = self.api_data(beeringredient_url)
         if beeringredients != nil
           beeringredients.each do |beeringredient|
-            if Ingredient.find_by(api_id: "#{beeringredient["id"]}") != nil
-              BeerIngredient.create(
-              beer_id: beer.id,
-              ingredient_id: Ingredient.find_by(api_id: "#{beeringredient["id"]}").id
-            )
-            end
+            Ingredient.find_or_create_by(name: beeringredient.fetch("name", ""),api_id: beeringredient.fetch("id", 0))
+            BeerIngredient.create(beer_id: beer.id,ingredient_id: Ingredient.find_by(api_id: "#{beeringredient["id"]}").id)
           end
         end
       end
@@ -178,6 +134,36 @@ class DbSeed
 
   def self.api_data(url)
     JSON.parse(RestClient.get(url))["data"]
+  end
+
+  def self.brewery_hash(brewery)
+    {
+      name: brewery.fetch("name", ""),
+      description: brewery.fetch("description", ""),
+      classification: brewery.fetch("brandClassification", ""),
+      established: brewery.fetch("established", 0000).to_i,
+      website: brewery.fetch("website", ""),
+      latitude: brewery["locations"].first.fetch("latitude", 0.0),
+      longitude: brewery["locations"].first.fetch("longitude", 0.0),
+      address: brewery["locations"].first.fetch("streetAddress", ""),
+      city: brewery["locations"].first.fetch("locality", ""),
+      state: brewery["locations"].first.fetch("region", ""),
+      country: brewery["locations"].first.fetch("countryIsoCode", ""),
+      postalcode: brewery["locations"].first.fetch("postalCode", ""),
+      api_key: brewery.fetch("id", "")
+    }
+  end
+
+  def self.beer_hash(beer,brewery)
+    {
+      name: beer.fetch("name", ""),
+      style: beer.dig("style", "name") ? beer["style"]["name"] : "",
+      abv: beer.fetch("abv", 0).to_i,
+      description: beer.fetch("description", "").
+      isorganic: beer.fetch("isOrganic", ""),
+      api_key: beer.fetch("id", ""),
+      brewery_id: brewery.id
+    }
   end
 
 end
